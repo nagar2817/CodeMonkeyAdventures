@@ -1,0 +1,482 @@
+I'd be glad to provide comprehensive solutions for the binary search tree (BST) problems you mentioned, incorporating the best practices and insights from the feedback:
+
+**1. Find a value in a Binary Search Tree:**
+
+- **Problem:** [Find a Value in a Binary Search Tree](https://leetcode.com/problems/search-in-a-binary-search-tree/)
+- **Solution:**
+  ```python
+   class Solution:
+    def searchBST(self, root: Optional[TreeNode], val: int) -> Optional[TreeNode]:
+        while root:
+            if root.val == val:
+                return root
+            elif val < root.val:
+                root = root.left
+            else:
+                root = root.right
+        return root
+  ```
+
+**2. Insertion of a node in a Binary Search Tree:**
+
+- **Problem:** [Insert into a Binary Search Tree](https://leetcode.com/problems/insert-into-a-binary-search-tree/)
+- **Solution:**
+  ```python
+  def insertIntoBST(root, val):
+      if not root:
+          return TreeNode(val)
+
+      if val < root.val:
+          root.left = insertIntoBST(root.left, val)
+      else:
+          root.right = insertIntoBST(root.right, val)
+
+      return root
+  ```
+
+**3. Deletion of a node in Binary Search Tree:**
+
+- **Problem:** [Delete Node in a Binary Search Tree](https://leetcode.com/problems/delete-node-in-a-bst/)
+- **Solution:**
+  ```python
+    class Solution:
+        def deleteNode(self, root: Optional[TreeNode], key: int) -> Optional[TreeNode]:
+            if not root:
+            return None
+
+            if key < root.val:
+                root.left = self.deleteNode(root.left, key)
+            elif key > root.val:
+                root.right = self.deleteNode(root.right, key)
+            else:
+                if not root.left:
+                    return root.right
+                elif not root.right:
+                    return root.left
+                else:
+                    temp = self._find_min(root.right)
+                    root.val = temp.val
+                    root.right = self.deleteNode(root.right,temp.val)
+            return root
+
+        def _find_min(self,node):
+            while node.left:
+                node = node.left
+            return node
+            
+  ```
+
+**4. Find minimum value in a Binary Search Tree:**
+
+- **Problem:** Minimum Value in a Binary Search Tree []
+- **Solution:**
+  ```python
+  def minValueBST(root):
+      while root.left:
+          root = root.left
+
+      return root.val
+  ```
+
+**5. Find maximum value in a Binary Search Tree:**
+
+- **Problem:** Maximum Value in a Binary Search Tree [invalid URL removed]
+- **Solution:**
+  ```python
+  def maxValueBST(root):
+      while root.right:
+          root = root.right
+
+      return root.val
+  ```
+
+**6. Find inorder successor in a Binary Search Tree:**
+
+- **Problem:** [Inorder Successor in Binary Search Tree](https://leetcode.com/problems/inorder-successor-in-bst-ii/)
+- **Solution:**
+  ```python
+  def inorderSuccessor(root, p):
+      """
+      :type root: TreeNode
+      :type p: TreeNode
+      :rtype: TreeNode
+      """
+
+      if not root:
+          return None
+
+      if p.val >= root.val:
+          return inorderSuccessor(root.right, p)
+
+      successor = inorderSuccessor(root.left, p)
+      return successor if successor else root
+  ```
+
+**7. Find inorder predecessor in a Binary Search Tree:**
+
+- **Problem:** Inorder Predecessor in Binary Search Tree [invalid URL removed]
+- **Solution:**
+  ```python
+  def inorderPredecessor(root, p):
+      """
+      :type root: TreeNode
+      :type p: TreeNode
+      :rtype: TreeNode
+      """
+
+      if not root:
+          return None
+
+      if p.val <= root.val:
+          return inorderPredecessor(root.left, p)
+
+      predecessor = inorderPredecessor(root.right, p)
+      return predecessor if predecessor else root
+  ```
+
+**8. Check if a binary tree is a BST or not:**
+
+- **Problem:** [Validate Binary Search Tree](https://leetcode.com/problems/validate-binary-search-tree/)
+- **Solution:**
+  ```python
+  def isValidBST(root):
+      def helper(node, min_val, max_val):
+          if not node:
+              return True
+
+          if node.val <= min_val or node.val >= max_val:
+              return False
+
+          return helper(node.left, min_val, node.val) and helper(node.right, node.val, max_val)
+
+      return helper(root, float('-inf'), float('inf'))
+  ```
+
+**9. LCA of 2 nodes in a BST:**
+
+- **Problem:** [Lowest Common Ancestor of Two Nodes in a Binary Search Tree](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/description/)
+- **Solution:**
+  ```python
+  def lowestCommonAncestorBST(root, p, q):
+      while root:
+          if p.val < root.val and q.val < root.val:
+              root = root.left
+          elif p.val > root.val and q.val > root.val:
+              root = root.right
+          else:
+              return root
+
+      return None
+  ```
+
+**10. Kth smallest element in a BST:**
+
+- **Problem:** [Kth Smallest Element in a BST](https://leetcode.com/problems/kth-smallest-element-in-a-bst/)
+- **Solution:**
+  ```python
+  def kthSmallest(root, k):
+      stack = []
+
+      while root or stack:
+          while root:
+              stack.append(root)
+              root = root.left
+
+          root = stack.pop()
+          k -= 1
+          if k == 0:
+              return root.val
+
+          root = root.right
+
+      return -1
+  ```
+
+**11. Kth largest element in a BST:**
+
+- **Problem:** Kth Largest Element in a BST [invalid URL removed]
+- **Solution:**
+  ```python
+  def kthLargest(root, k):
+      """
+      :type root: TreeNode
+      :type k: int
+      :rtype: int
+      """
+
+      stack = []
+
+      while root or stack:
+          while root:
+              stack.append(root)
+              root = root.right
+
+          root = stack.pop()
+          k -= 1
+          if k == 0:
+              return root.val
+
+          root = root.left
+
+      return -1
+  ```
+
+## 13. Count Complete Tree Nodes:
+
+**Problem:** [Count Complete Tree Nodes](https://leetcode.com/problems/count-complete-tree-nodes/)
+
+**Solution:**
+
+```python
+def countCompleteTreeNodes(root):
+    """
+    :type root: TreeNode
+    :rtype: int
+    """
+
+    if not root:
+        return 0
+
+    left_height = right_height = 0
+
+    temp = root
+    while temp:
+        left_height += 1
+        temp = temp.left
+
+    temp = root
+    while temp:
+        right_height += 1
+        temp = temp.right
+
+    if left_height == right_height:
+        return 2 ** left_height - 1
+
+    return 1 + countCompleteTreeNodes(root.left) + countCompleteTreeNodes(root.right)
+```
+
+## 14. Find the median of BST:
+
+**Problem:** Find the Median of a BST [invalid URL removed]
+
+**Solution:**
+
+```python
+def findMedian(root):
+    """
+    :type root: TreeNode
+    :rtype: float
+    """
+
+    def inorder(root, values):
+        if not root:
+            return
+
+        inorder(root.left, values)
+        values.append(root.val)
+        inorder(root.right, values)
+
+    values = []
+    inorder(root, values)
+
+    n = len(values)
+    if n % 2 == 0:
+        return (values[n // 2 - 1] + values[n // 2]) / 2
+    else:
+        return values[n // 2]
+```
+
+## 15. Count BST nodes that lie in a given range:
+
+**Problem:** Count BST Nodes That Lie in a Given Range [invalid URL removed]
+
+**Solution:**
+
+```python
+def countRange(root, low, high):
+    """
+    :type root: TreeNode
+    :type low: int
+    :type high: int
+    :rtype: int
+    """
+
+    if not root:
+        return 0
+
+    if root.val < low:
+        return countRange(root.right, low, high)
+    elif root.val > high:
+        return countRange(root.left, low, high)
+    else:
+        return 1 + countRange(root.left, low, high) + countRange(root.right, low, high)
+```
+
+## 16. Largest BST in a binary tree:
+
+**Problem:** Largest BST Subtree [invalid URL removed]
+
+**Solution:**
+
+```python
+def largestBSTSubtree(root):
+    """
+    :type root: TreeNode
+    :rtype: int
+    """
+
+    def helper(node):
+        if not node:
+            return 0, float('inf'), float('-inf')
+
+        left_size, left_min, left_max = helper(node.left)
+        right_size, right_min, right_max = helper(node.right)
+
+        if left_max < node.val < right_min:
+            return left_size + right_size + 1, min(left_min, node.val), max(right_max, node.val)
+        else:
+            return max(left_size, right_size), float('-inf'), float('inf')
+
+    _, _, _ = helper(root)
+    return max_size
+
+```
+
+## 17. Flatten BST to sorted linked list:
+
+**Problem:** Flatten a Binary Search Tree to a Linked List [invalid URL removed]
+
+**Solution:**
+
+```python
+def flatten(root):
+    """
+    :type root: TreeNode
+    :rtype: None
+    """
+
+    def helper(node):
+        if not node:
+            return None
+
+        left_tail = helper(node.left)
+        right_tail = helper(node.right)
+
+        if left_tail:
+            left_tail.right = node
+            node.left = None
+
+        node.right = right_tail
+
+        return node if right_tail else left_tail
+
+    helper(root)
+```
+
+## 18. Construct BST from preorder traversal:
+
+**Problem:** Construct Binary Search Tree from Preorder Traversal [invalid URL removed]
+
+**Solution:**
+
+```python
+def constructFromPreorder(preorder):
+    """
+    :type preorder: List[int]
+    :rtype: TreeNode
+    """
+
+    def helper(preorder, min_val, max_val):
+        if not preorder or preorder[0] < min_val or preorder[0] > max_val:
+            return None
+
+        root = TreeNode(preorder[0])
+        root.left = helper(preorder[1:], min_val, root.val)
+        root.right = helper(preorder[1:], root.val, max_val)
+
+        return root
+
+    return helper(preorder, float('-inf'), float('inf'))
+```
+
+## 19. Convert BST into balanced BST:
+
+**Problem:** Convert a Binary Search Tree to a Balanced Binary Search Tree [invalid URL removed]
+
+**Solution:**
+
+```python
+def balanceBST(root):
+    """
+    :type root: TreeNode
+    :rtype: TreeNode
+    """
+
+    def inorder(node, values):
+        if not node:
+            return
+
+        inorder(node.left, values)
+        values.append(node.val)
+        inorder(node.right, values)
+
+    def constructBST(values, start, end):
+        if start > end:
+            return None
+
+        mid = (start + end) // 2
+        root = TreeNode(values[mid])
+        root.left = constructBST(values, start, mid - 1)
+        root.right = constructBST(values, mid + 1, end)
+
+        return root
+
+    values = []
+    inorder(root, values)
+
+    return constructBST(values, 0, len(values) - 1)
+```
+
+## 20. Merge two BSTs:
+
+**Problem:** Merge Two Binary Search Trees [invalid URL removed]
+
+**Solution:**
+
+```python
+def mergeBSTs(root1, root2):
+    """
+    :type root1: TreeNode
+    :type root2: TreeNode
+    :rtype: TreeNode
+    """
+
+    def inorder(root, values):
+        if not root:
+            return
+
+        inorder(root.left, values)
+        values.append(root.val)
+        inorder(root.right, values)
+
+    def constructBST(values, start, end):
+        if start > end:
+            return None
+
+        mid = (start + end) // 2
+        root = TreeNode(values[mid])
+        root.left = constructBST(values, start, mid - 1)
+        root.right = constructBST(values, mid + 1, end)
+
+        return root
+
+    values1 = []
+    values2 = []
+
+    inorder(root1, values1)
+    inorder(root2, values2)
+
+    merged_values = sorted(values1 + values2)
+
+    return constructBST(merged_values, 0, len(merged_values) - 1)
+```

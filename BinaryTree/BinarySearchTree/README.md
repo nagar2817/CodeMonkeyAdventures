@@ -1,5 +1,3 @@
-I'd be glad to provide comprehensive solutions for the binary search tree (BST) problems you mentioned, incorporating the best practices and insights from the feedback:
-
 **1. Find a value in a Binary Search Tree:**
 
 - **Problem:** [Find a Value in a Binary Search Tree](https://leetcode.com/problems/search-in-a-binary-search-tree/)
@@ -96,12 +94,6 @@ I'd be glad to provide comprehensive solutions for the binary search tree (BST) 
 - **Solution:**
   ```python
   def inorderSuccessor(root, p):
-      """
-      :type root: TreeNode
-      :type p: TreeNode
-      :rtype: TreeNode
-      """
-
       if not root:
           return None
 
@@ -194,7 +186,7 @@ I'd be glad to provide comprehensive solutions for the binary search tree (BST) 
 
 **11. Kth largest element in a BST:**
 
-- **Problem:** Kth Largest Element in a BST [invalid URL removed]
+- **Problem:** Kth Largest Element in a BST []
 - **Solution:**
   ```python
   def kthLargest(root, k):
@@ -229,11 +221,6 @@ I'd be glad to provide comprehensive solutions for the binary search tree (BST) 
 
 ```python
 def countCompleteTreeNodes(root):
-    """
-    :type root: TreeNode
-    :rtype: int
-    """
-
     if not root:
         return 0
 
@@ -263,11 +250,6 @@ def countCompleteTreeNodes(root):
 
 ```python
 def findMedian(root):
-    """
-    :type root: TreeNode
-    :rtype: float
-    """
-
     def inorder(root, values):
         if not root:
             return
@@ -288,7 +270,7 @@ def findMedian(root):
 
 ## 15. Count BST nodes that lie in a given range:
 
-**Problem:** Count BST Nodes That Lie in a Given Range [invalid URL removed]
+**Problem:** Count BST Nodes That Lie in a Given Range []
 
 **Solution:**
 
@@ -320,83 +302,81 @@ def countRange(root, low, high):
 
 ```python
 def largestBSTSubtree(root):
-    """
-    :type root: TreeNode
-    :rtype: int
-    """
+    class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
 
-    def helper(node):
-        if not node:
-            return 0, float('inf'), float('-inf')
+class Solution:
+    def largestBSTSubtree(self, root: TreeNode) -> int:
+        def helper(node):
+            if not node:
+                return (True, float('inf'), float('-inf'), 0)  # Valid subtree with min/max values and size
 
-        left_size, left_min, left_max = helper(node.left)
-        right_size, right_min, right_max = helper(node.right)
+            left_is_bst, left_min, left_max, left_size = helper(node.left)
+            right_is_bst, right_min, right_max, right_size = helper(node.right)
 
-        if left_max < node.val < right_min:
-            return left_size + right_size + 1, min(left_min, node.val), max(right_max, node.val)
-        else:
-            return max(left_size, right_size), float('-inf'), float('inf')
+            if not left_is_bst or not right_is_bst or left_max >= node.val or right_min <= node.val:
+                return (False, 0, 0, 0)  # Not a BST
 
-    _, _, _ = helper(root)
-    return max_size
+            # Calculate min, max, and size for the current subtree
+            curr_min = min(left_min, node.val)
+            curr_max = max(right_max, node.val)
+            curr_size = left_size + right_size + 1
 
+            return (True, curr_min, curr_max, curr_size)
+
+        _, _, _, max_size = helper(root)
+        return max_size
 ```
 
 ## 17. Flatten BST to sorted linked list:
 
-**Problem:** Flatten a Binary Search Tree to a Linked List [invalid URL removed]
+**Problem:** Flatten a Binary Search Tree to a Linked List [https://leetcode.com/problems/flatten-binary-tree-to-linked-list/description/](https://leetcode.com/problems/flatten-binary-tree-to-linked-list/description/)
 
 **Solution:**
 
 ```python
-def flatten(root):
-    """
-    :type root: TreeNode
-    :rtype: None
-    """
+class Solution:
+    def flatten(self, root: Optional[TreeNode]) -> None:
+        """
+        Do not return anything, modify root in-place instead.
+        """
+        if not root:
+            return
+        self.flatten(root.left)
+        right_subtree = root.right
+        root.right = root.left
+        root.left = None
+        self.flatten(right_subtree)
+        curr = root
+        while curr.right:
+            curr = curr.right
+        curr.right = right_subtree
 
-    def helper(node):
-        if not node:
-            return None
-
-        left_tail = helper(node.left)
-        right_tail = helper(node.right)
-
-        if left_tail:
-            left_tail.right = node
-            node.left = None
-
-        node.right = right_tail
-
-        return node if right_tail else left_tail
-
-    helper(root)
 ```
 
 ## 18. Construct BST from preorder traversal:
 
-**Problem:** Construct Binary Search Tree from Preorder Traversal [invalid URL removed]
+**Problem:** Construct Binary Search Tree from Preorder Traversal [https://leetcode.com/problems/construct-binary-search-tree-from-preorder-traversal/](https://leetcode.com/problems/construct-binary-search-tree-from-preorder-traversal/)
 
 **Solution:**
 
 ```python
-def constructFromPreorder(preorder):
-    """
-    :type preorder: List[int]
-    :rtype: TreeNode
-    """
-
-    def helper(preorder, min_val, max_val):
-        if not preorder or preorder[0] < min_val or preorder[0] > max_val:
-            return None
-
-        root = TreeNode(preorder[0])
-        root.left = helper(preorder[1:], min_val, root.val)
-        root.right = helper(preorder[1:], root.val, max_val)
-
-        return root
-
-    return helper(preorder, float('-inf'), float('inf'))
+class Solution:
+    def bstFromPreorder(self, preorder: List[int]) -> Optional[TreeNode]:
+        i = [0]
+        def helper(A,bound):
+            if i[0] == len(A) or A[i[0]] > bound:
+                return None
+            root = TreeNode(A[i[0]])
+            i[0] +=1
+            root.left = helper(A,root.val)
+            root.right = helper(A,bound)
+            return root
+        return helper(preorder, float('inf'))
+            
 ```
 
 ## 19. Convert BST into balanced BST:

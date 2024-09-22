@@ -72,7 +72,7 @@
 
 **18. Remove zero sum from consecutive nodes from linked list**
 
-- **LeetCode Link:** [invalid URL removed]
+- **LeetCode Link:** [https://leetcode.com/problems/remove-zero-sum-consecutive-nodes-from-linked-list/description/](https://leetcode.com/problems/remove-zero-sum-consecutive-nodes-from-linked-list/description/)
 
 **19. Merge k sorted Linked List**
 

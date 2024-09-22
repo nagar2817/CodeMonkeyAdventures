@@ -92,38 +92,51 @@
 
 - **Problem:** [Inorder Successor in Binary Search Tree](https://leetcode.com/problems/inorder-successor-in-bst-ii/)
 - **Solution:**
-  ```python
-  def inorderSuccessor(root, p):
-      if not root:
-          return None
+```python
+class Solution:
+    def inorderSuccessor(self, root: TreeNode, p: TreeNode) -> Optional[TreeNode]:
+        if not root:
+            return None
 
-      if p.val >= root.val:
-          return inorderSuccessor(root.right, p)
+        if p.right:
+            # If the node has a right child, the successor is the leftmost node in the right subtree
+            successor = p.right
+            while successor.left:
+                successor = successor.left
+            return successor
 
-      successor = inorderSuccessor(root.left, p)
-      return successor if successor else root
+        successor = None
+        current = root
+        while current:
+            if p.val < current.val:
+                successor = current
+                current = current.left
+            else:
+                current = current.right
+
+        return successor
   ```
 
 **7. Find inorder predecessor in a Binary Search Tree:**
 
-- **Problem:** Inorder Predecessor in Binary Search Tree [invalid URL removed]
+- **Problem:** Inorder Predecessor in Binary Search Tree
 - **Solution:**
-  ```python
-  def inorderPredecessor(root, p):
-      """
-      :type root: TreeNode
-      :type p: TreeNode
-      :rtype: TreeNode
-      """
+```python
+class Solution:
+    def inorderPredecessor(self, root: TreeNode, p: TreeNode) -> Optional[TreeNode]:
 
-      if not root:
-          return None
+        if not root:
+            return None
 
-      if p.val <= root.val:
-          return inorderPredecessor(root.left, p)
+        if p.val < root.val:
+            return self.inorderPredecessor(root.left, p)
 
-      predecessor = inorderPredecessor(root.right, p)
-      return predecessor if predecessor else root
+        # If p is in the right subtree, the predecessor is either in the right subtree or the current node
+        successor = self.inorderPredecessor(root.right, p)
+        if successor:
+            return successor
+
+        return roott
   ```
 
 **8. Check if a binary tree is a BST or not:**
@@ -381,82 +394,60 @@ class Solution:
 
 ## 19. Convert BST into balanced BST:
 
-**Problem:** Convert a Binary Search Tree to a Balanced Binary Search Tree [invalid URL removed]
+**Problem:** Convert a Binary Search Tree to a Balanced Binary Search Tree [https://leetcode.com/problems/balance-a-binary-search-tree/submissions/1398127416/](https://leetcode.com/problems/balance-a-binary-search-tree/submissions/1398127416/)
 
 **Solution:**
 
 ```python
-def balanceBST(root):
-    """
-    :type root: TreeNode
-    :rtype: TreeNode
-    """
-
-    def inorder(node, values):
-        if not node:
-            return
-
-        inorder(node.left, values)
-        values.append(node.val)
-        inorder(node.right, values)
-
-    def constructBST(values, start, end):
-        if start > end:
+class Solution:
+    def balanceBST(self, root: TreeNode) -> TreeNode:
+        if not root:
             return None
 
-        mid = (start + end) // 2
-        root = TreeNode(values[mid])
-        root.left = constructBST(values, start, mid - 1)
-        root.right = constructBST(values, mid + 1, end)
+        # Flatten the BST into a sorted list
+        def inorder(node, result):
+            if not node:
+                return
+            inorder(node.left, result)
+            result.append(node.val)
+            inorder(node.right, result)
 
-        return root
+        result = []
+        inorder(root, result)
 
-    values = []
-    inorder(root, values)
+        # Construct a balanced BST from the sorted list
+        def constructBST(values, start, end):
+            if start > end:
+                return None
+            mid = (start + end) // 2
+            node = TreeNode(values[mid])
+            node.left = constructBST(values, start, mid - 1)
+            node.right = constructBST(values, mid + 1, end)
+            return node
 
-    return constructBST(values, 0, len(values) - 1)
+        return constructBST(result, 0, len(result) - 1)
 ```
 
 ## 20. Merge two BSTs:
 
-**Problem:** Merge Two Binary Search Trees [invalid URL removed]
+**Problem:** Merge Two Binary Search Trees
 
 **Solution:**
 
 ```python
-def mergeBSTs(root1, root2):
-    """
-    :type root1: TreeNode
-    :type root2: TreeNode
-    :rtype: TreeNode
-    """
+def merge(root1, root2):
+    if not root1:
+        return root2
+    if not root2:
+        return root1
 
-    def inorder(root, values):
-        if not root:
-            return
+    # Choose the root of the merged tree based on the values
+    if root1.val < root2.val:
+        merged_root = root1
+        merged_root.right = self.merge(root1.right, root2)
+    else:
+        merged_root = root2
+        merged_root.left = self.merge(root1, root2.left)
 
-        inorder(root.left, values)
-        values.append(root.val)
-        inorder(root.right, values)
-
-    def constructBST(values, start, end):
-        if start > end:
-            return None
-
-        mid = (start + end) // 2
-        root = TreeNode(values[mid])
-        root.left = constructBST(values, start, mid - 1)
-        root.right = constructBST(values, mid + 1, end)
-
-        return root
-
-    values1 = []
-    values2 = []
-
-    inorder(root1, values1)
-    inorder(root2, values2)
-
-    merged_values = sorted(values1 + values2)
-
-    return constructBST(merged_values, 0, len(merged_values) - 1)
+    return merged_root
 ```
